@@ -1,6 +1,6 @@
 package de.mathema.robertbrautigam.kviz
 
-sealed class KubernetesObject() {
+sealed class KubernetesObject {
     abstract fun name(): String
 }
 

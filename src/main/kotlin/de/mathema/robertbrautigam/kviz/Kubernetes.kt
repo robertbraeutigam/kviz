@@ -2,7 +2,7 @@ package de.mathema.robertbrautigam.kviz
 
 import java.io.File
 
-class Kubernetes() {
+class Kubernetes {
     fun objects(): List<KubernetesObject> {
         val pods = objects("pods", Pod.Companion::parsePod)
         val replicaSets = objects("replicasets", ReplicaSet.Companion::parseReplicaSet)

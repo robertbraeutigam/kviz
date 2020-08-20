@@ -2,8 +2,8 @@ package de.mathema.robertbrautigam.kviz
 
 import java.util.*
 
-class Application(val kubernetes: Kubernetes) {
-    val currentObjects = CurrentObjects()
+class Application {
+    private val currentObjects = CurrentObjects()
 
     fun runApplication() {
         while (true) {
@@ -17,7 +17,7 @@ class Application(val kubernetes: Kubernetes) {
     }
 
     private fun runBody() {
-        val objects = kubernetes.objects()
+        val objects = Kubernetes().objects()
         val now = Date()
         currentObjects.update(now, objects)
         currentObjects.renderToFile(now)
