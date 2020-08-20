@@ -1,5 +1,7 @@
 package de.mathema.robertbrautigam.kviz
 
+import arrow.core.getOrElse
+import arrow.core.toOption
 import guru.nidi.graphviz.attribute.Color
 import guru.nidi.graphviz.attribute.Label
 import guru.nidi.graphviz.attribute.Shape
@@ -11,18 +13,14 @@ import java.util.*
 
 class CurrentObjects(var objects: Map<String, Changed<KubernetesObject>> = emptyMap()) {
     fun update(now: Date, newKubernetesObjects: List<KubernetesObject>) {
-        val newObjects: MutableMap<String, Changed<KubernetesObject>> = mutableMapOf()
-        for (newObject in newKubernetesObjects) {
-            val oldObject = objects[newObject.name()]
-            if (oldObject == null) {
-                newObjects[newObject.name()] =
-                    Changed(newObject, now)
-            } else {
-                oldObject.update(now, newObject)
-                newObjects[newObject.name()] = oldObject
-            }
-        }
-        objects = newObjects
+        objects = newKubernetesObjects
+              .map { newObject ->
+                  objects[newObject.name()].toOption()
+                      .map { it.update(now, newObject); it }
+                      .getOrElse { Changed(newObject, now) }
+              }
+              .map { it.obj.name() to it }
+              .toMap()
     }
 
     fun view(now: Date) = this.objects.values.map {
