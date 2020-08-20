@@ -2,7 +2,7 @@ package de.mathema.robertbrautigam.kviz
 
 import java.util.*
 
-class Application(val kubernetes: Kubernetes, val graphviz: Graphviz) {
+class Application(val kubernetes: Kubernetes) {
     val currentObjects = CurrentObjects()
 
     fun runApplication() {
@@ -20,6 +20,6 @@ class Application(val kubernetes: Kubernetes, val graphviz: Graphviz) {
         val objects = kubernetes.objects()
         val now = Date()
         currentObjects.update(now, objects)
-        graphviz.view(currentObjects.view(now))
+        currentObjects.renderToFile(now)
     }
 }
