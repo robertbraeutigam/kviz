@@ -1,5 +1,5 @@
 package de.mathema.robertbrautigam.kviz
 
 fun main() {
-    Application().runApplication()
+    Application().runApplication(CurrentObjects())
 }

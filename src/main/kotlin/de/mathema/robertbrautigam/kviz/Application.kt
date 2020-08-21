@@ -3,23 +3,20 @@ package de.mathema.robertbrautigam.kviz
 import java.util.*
 
 class Application {
-    private val currentObjects = CurrentObjects()
-
-    fun runApplication() {
-        while (true) {
-            loopBody()
-        }
+    tailrec fun runApplication(currentObjects: CurrentObjects) {
+        runApplication(loopBody(currentObjects))
     }
 
-    private fun loopBody() {
-        runBody()
+    private fun loopBody(currentObjects: CurrentObjects): CurrentObjects {
         Thread.sleep(1000L)
+        return runBody(currentObjects)
     }
 
-    private fun runBody() {
-        val objects = Kubernetes().objects()
+    private fun runBody(currentObjects: CurrentObjects): CurrentObjects {
+        val objects = objects()
         val now = Date()
-        currentObjects.update(now, objects)
-        currentObjects.renderToFile(now)
+        val newObjects = update(currentObjects, now, objects)
+        renderToFile(currentObjects, now)
+        return newObjects
     }
 }

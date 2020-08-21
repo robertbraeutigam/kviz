@@ -8,36 +8,32 @@ import guru.nidi.graphviz.model.Node
 import java.io.File
 import guru.nidi.graphviz.engine.Graphviz as GraphvizEngine
 
-class Graphviz {
-    private var nodes = mutableListOf<Node>()
+data class Graphviz(val nodes: List<Node> = emptyList())
 
-    fun renderToFile() {
-        val graph = graph("kubernetes-graph").directed()
-            .graphAttr()
-            .with(Rank.dir(Rank.RankDir.RIGHT_TO_LEFT))
-            .with(nodes)
-            .nodeAttr().with(Font.size(24))
-        GraphvizEngine
-            .fromGraph(graph)
-            .fontAdjust(0.85)
-            .render(Format.PNG).toFile(File("kubernetes-graph.png"))
-    }
-
-    fun addUnchanged(obj: KubernetesObject) {
-        nodes.add(renderToFile(obj).with(Style.FILLED))
-    }
-
-    fun addChanged(obj: KubernetesObject) {
-        nodes.add(renderToFile(obj).with(Style.FILLED.and(Style.BOLD)))
-    }
-
-    private fun renderToFile(obj: KubernetesObject) = when(obj) {
-        is Pod -> node(obj)
-            .with(Label.lines(obj.name, "("+obj.status+")"))
-            .link(Factory.to(Factory.node(obj.controlledBy)))
-        is ReplicaSet -> node(obj)
-            .with(Shape.RECTANGLE, Color.BISQUE.fill())
-    }
-
-    private fun node(obj: KubernetesObject) = Factory.node(obj.name())
+fun renderToFile(graphviz: Graphviz) {
+    val graph = graph("kubernetes-graph").directed()
+        .graphAttr()
+        .with(Rank.dir(Rank.RankDir.RIGHT_TO_LEFT))
+        .with(graphviz.nodes)
+        .nodeAttr().with(Font.size(24))
+    GraphvizEngine
+        .fromGraph(graph)
+        .fontAdjust(0.85)
+        .render(Format.PNG).toFile(File("kubernetes-graph.png"))
 }
+
+fun addUnchanged(graphviz: Graphviz, obj: KubernetesObject) =
+    Graphviz(graphviz.nodes + listOf(decoratedNode(obj).with(Style.FILLED)))
+
+fun addChanged(graphviz: Graphviz, obj: KubernetesObject) =
+    Graphviz(graphviz.nodes + listOf(decoratedNode(obj).with(Style.FILLED.and(Style.BOLD))))
+
+private fun decoratedNode(obj: KubernetesObject) = when (obj) {
+    is Pod -> node(obj)
+        .with(Label.lines(obj.name, "(" + obj.status + ")"))
+        .link(Factory.to(Factory.node(obj.controlledBy)))
+    is ReplicaSet -> node(obj)
+        .with(Shape.RECTANGLE, Color.BISQUE.fill())
+}
+
+private fun node(obj: KubernetesObject) = Factory.node(name(obj))

@@ -4,17 +4,12 @@ import java.util.*
 
 private const val CHANGE_TIME = 4000L
 
-class Changed<T>(var obj: T, private var at: Date) {
-    fun isUpdating(now: Date) = now.time < at.time + CHANGE_TIME
+class Changed<T>(val obj: T, val at: Date)
 
-    fun update(now: Date, newObj: T) {
-        if (newObj != obj) {
-            obj = newObj
-            at = now
-        }
-    }
+fun isUpdating(changed: Changed<*>, now: Date) = now.time < changed.at.time + CHANGE_TIME
+
+fun <T> update(changed: Changed<T>, now: Date, newObj: T) = if (newObj != changed.obj) {
+    Changed(newObj, now)
+} else {
+    changed
 }
-
-
-
-

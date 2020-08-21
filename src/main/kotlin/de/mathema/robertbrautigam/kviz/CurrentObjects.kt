@@ -4,27 +4,24 @@ import arrow.core.getOrElse
 import arrow.core.toOption
 import java.util.*
 
-class CurrentObjects(private var objects: Map<String, Changed<KubernetesObject>> = emptyMap()) {
-    fun update(now: Date, newKubernetesObjects: List<KubernetesObject>) {
-        objects = newKubernetesObjects
-              .map { newObject ->
-                  objects[newObject.name()].toOption()
-                      .map { it.update(now, newObject); it }
-                      .getOrElse { Changed(newObject, now) }
-              }
-              .map { it.obj.name() to it }
-              .toMap()
-    }
+class CurrentObjects(val objects: Map<String, Changed<KubernetesObject>> = emptyMap())
 
-    fun renderToFile(now: Date) {
-        val graphviz = Graphviz()
-        objects.values.forEach {
-            if (it.isUpdating(now)) {
-                graphviz.addChanged(it.obj)
-            } else {
-                graphviz.addUnchanged(it.obj)
-            }
+fun update(oldObjects: CurrentObjects, now: Date, newKubernetesObjects: List<KubernetesObject>) =
+    CurrentObjects(newKubernetesObjects
+        .map { newObject ->
+            oldObjects.objects[name(newObject)].toOption()
+                .map { update(it, now, newObject) }
+                .getOrElse { Changed(newObject, now) }
         }
-        graphviz.renderToFile()
-    }
+        .map { name(it.obj) to it }
+        .toMap())
+
+fun renderToFile(objects: CurrentObjects, now: Date) {
+    renderToFile(objects.objects.values.fold(Graphviz()) { graph: Graphviz, changed: Changed<KubernetesObject> ->
+        if (isUpdating(changed, now)) {
+            addChanged(graph, changed.obj)
+        } else {
+            addUnchanged(graph, changed.obj)
+        }
+    })
 }
