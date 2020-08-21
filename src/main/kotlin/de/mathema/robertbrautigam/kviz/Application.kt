@@ -2,19 +2,18 @@ package de.mathema.robertbrautigam.kviz
 
 import java.util.*
 
-tailrec fun runApplication(currentObjects: CurrentObjects) {
-    runApplication(loopBody(currentObjects))
-}
+fun runApplication(currentObjects: CurrentObjects): Try<Unit> =
+    loopBody(currentObjects).flatMap(::runApplication)
 
-private fun loopBody(currentObjects: CurrentObjects): CurrentObjects {
+private fun loopBody(currentObjects: CurrentObjects): Try<CurrentObjects> {
     Thread.sleep(1000L)
     return runBody(currentObjects)
 }
 
-private fun runBody(currentObjects: CurrentObjects): CurrentObjects {
-    val objects = objects()
-    val now = Date()
-    val newObjects = currentObjects.update(now, objects)
-    currentObjects.renderToFile(now)
-    return newObjects
-}
+private fun runBody(currentObjects: CurrentObjects) =
+    objects().map { objects ->
+        val now = Date()
+        val newObjects = currentObjects.update(now, objects)
+        currentObjects.renderToFile(now)
+        newObjects
+    }

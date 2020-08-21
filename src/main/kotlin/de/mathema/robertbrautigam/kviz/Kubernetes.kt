@@ -2,24 +2,28 @@ package de.mathema.robertbrautigam.kviz
 
 import java.io.File
 
-fun objects(): List<KubernetesObject> {
+fun objects(): Try<List<KubernetesObject>> {
     val pods = objects("pods", ::parsePod)
     val replicaSets = objects("replicasets", ::parseReplicaSet)
-    return pods.union(replicaSets).toList().filterNotNull()
-}
-
-private fun <T> objects(type: String, parse: (Map<String, String>) -> T): List<T> {
-    val description = descriptionBlocks(type)
-    return description.map {
-        parse(descriptionAttrs(it))
+    return pods.flatMap { ps ->
+        replicaSets.map { rs ->
+            ps.plus(rs).filterNotNull()
+        }
     }
 }
 
-private fun descriptionBlocks(type: String) = descriptionText(type)
-    .split(Regex("\n\n"))
+private fun <T> objects(type: String, parse: (Map<String, String>) -> T) =
+    descriptionBlocks(type).map { list ->
+        list.map {
+            parse(descriptionAttrs(it))
+        }
+    }
 
-private fun descriptionText(type: String): String {
-    return File("kubernetes-$type")
+private fun descriptionBlocks(type: String) = descriptionText(type)
+    .map { it.split(Regex("\n\n")) }
+
+private fun descriptionText(type: String) = Try {
+    File("kubernetes-$type")
         .readText()
 }
 
