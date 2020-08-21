@@ -2,10 +2,10 @@ package de.mathema.robertbrautigam.kviz
 
 import java.util.*
 
-fun runApplication(currentObjects: CurrentObjects): Try<Unit> =
+fun runApplication(currentObjects: CurrentObjects): IO<Unit> =
     loopBody(currentObjects).flatMap(::runApplication)
 
-private fun loopBody(currentObjects: CurrentObjects): Try<CurrentObjects> {
+private fun loopBody(currentObjects: CurrentObjects): IO<CurrentObjects> {
     Thread.sleep(1000L)
     return runBody(currentObjects)
 }

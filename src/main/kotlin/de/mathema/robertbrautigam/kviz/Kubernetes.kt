@@ -2,7 +2,7 @@ package de.mathema.robertbrautigam.kviz
 
 import java.io.File
 
-fun objects(): Try<List<KubernetesObject>> {
+fun objects(): IO<List<KubernetesObject>> {
     val pods = objects("pods", ::parsePod)
     val replicaSets = objects("replicasets", ::parseReplicaSet)
     return pods.flatMap { ps ->
@@ -22,7 +22,7 @@ private fun <T> objects(type: String, parse: (Map<String, String>) -> T) =
 private fun descriptionBlocks(type: String) = descriptionText(type)
     .map { it.split(Regex("\n\n")) }
 
-private fun descriptionText(type: String) = Try {
+private fun descriptionText(type: String) = IO {
     File("kubernetes-$type")
         .readText()
 }
