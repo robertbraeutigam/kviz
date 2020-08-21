@@ -10,11 +10,11 @@ import guru.nidi.graphviz.engine.Graphviz as GraphvizEngine
 
 data class Graphviz(val nodes: List<Node> = emptyList())
 
-fun renderToFile(graphviz: Graphviz) {
+fun Graphviz.renderToFile() {
     val graph = graph("kubernetes-graph").directed()
         .graphAttr()
         .with(Rank.dir(Rank.RankDir.RIGHT_TO_LEFT))
-        .with(graphviz.nodes)
+        .with(this.nodes)
         .nodeAttr().with(Font.size(24))
     GraphvizEngine
         .fromGraph(graph)
@@ -22,11 +22,11 @@ fun renderToFile(graphviz: Graphviz) {
         .render(Format.PNG).toFile(File("kubernetes-graph.png"))
 }
 
-fun addUnchanged(graphviz: Graphviz, obj: KubernetesObject) =
-    Graphviz(graphviz.nodes + listOf(decoratedNode(obj).with(Style.FILLED)))
+fun Graphviz.addUnchanged(obj: KubernetesObject) =
+    Graphviz(this.nodes + listOf(decoratedNode(obj).with(Style.FILLED)))
 
-fun addChanged(graphviz: Graphviz, obj: KubernetesObject) =
-    Graphviz(graphviz.nodes + listOf(decoratedNode(obj).with(Style.FILLED.and(Style.BOLD))))
+fun Graphviz.addChanged(obj: KubernetesObject) =
+    Graphviz(this.nodes + listOf(decoratedNode(obj).with(Style.FILLED.and(Style.BOLD))))
 
 private fun decoratedNode(obj: KubernetesObject) = when (obj) {
     is Pod -> node(obj)

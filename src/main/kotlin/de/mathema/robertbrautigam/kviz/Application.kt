@@ -14,7 +14,7 @@ private fun loopBody(currentObjects: CurrentObjects): CurrentObjects {
 private fun runBody(currentObjects: CurrentObjects): CurrentObjects {
     val objects = objects()
     val now = Date()
-    val newObjects = update(currentObjects, now, objects)
-    renderToFile(currentObjects, now)
+    val newObjects = currentObjects.update(now, objects)
+    currentObjects.renderToFile(now)
     return newObjects
 }
