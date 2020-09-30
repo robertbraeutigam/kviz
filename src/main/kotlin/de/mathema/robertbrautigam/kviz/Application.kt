@@ -1,5 +1,6 @@
 package de.mathema.robertbrautigam.kviz
 
+import arrow.fx.IO
 import java.util.*
 
 fun runApplication(currentObjects: CurrentObjects): IO<Unit> =

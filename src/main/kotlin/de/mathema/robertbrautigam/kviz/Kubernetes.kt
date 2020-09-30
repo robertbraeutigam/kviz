@@ -1,15 +1,14 @@
 package de.mathema.robertbrautigam.kviz
 
+import arrow.fx.IO
+import arrow.fx.extensions.fx
+import arrow.syntax.collections.flatten
 import java.io.File
 
-fun objects(): IO<List<KubernetesObject>> {
-    val pods = objects("pods", ::parsePod)
-    val replicaSets = objects("replicasets", ::parseReplicaSet)
-    return pods.flatMap { ps ->
-        replicaSets.map { rs ->
-            ps.plus(rs).filterNotNull()
-        }
-    }
+fun objects() = IO.fx {
+    val pods = objects("pods", ::parsePod).bind()
+    val replicaSets = objects("replicasets", ::parseReplicaSet).bind()
+    pods.plus(replicaSets).flatten()
 }
 
 private fun <T> objects(type: String, parse: (Map<String, String>) -> T) =

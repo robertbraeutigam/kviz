@@ -1,5 +1,5 @@
 package de.mathema.robertbrautigam.kviz
 
 fun main() {
-    runApplication(CurrentObjects()).runUnsafe()
+    runApplication(CurrentObjects()).unsafeRunSync()
 }
