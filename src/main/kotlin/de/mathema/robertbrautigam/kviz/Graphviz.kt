@@ -10,16 +10,18 @@ import guru.nidi.graphviz.engine.Graphviz as GraphvizEngine
 
 data class Graphviz(val nodes: List<Node> = emptyList())
 
-fun Graphviz.renderToFile() {
+fun Graphviz.renderToFile(): IO<Unit> {
     val graph = graph("kubernetes-graph").directed()
         .graphAttr()
         .with(Rank.dir(Rank.RankDir.RIGHT_TO_LEFT))
         .with(this.nodes)
         .nodeAttr().with(Font.size(24))
-    GraphvizEngine
-        .fromGraph(graph)
-        .fontAdjust(0.85)
-        .render(Format.PNG).toFile(File("kubernetes-graph.png"))
+    return IO {
+        GraphvizEngine
+            .fromGraph(graph)
+            .fontAdjust(0.85)
+            .render(Format.PNG).toFile(File("kubernetes-graph.png"))
+    }.map { Unit }
 }
 
 fun Graphviz.addUnchanged(obj: KubernetesObject) =

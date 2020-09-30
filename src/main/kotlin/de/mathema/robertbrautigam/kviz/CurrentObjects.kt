@@ -16,7 +16,7 @@ fun CurrentObjects.update(now: Date, newKubernetesObjects: List<KubernetesObject
         .map { name(it.obj) to it }
         .toMap())
 
-fun CurrentObjects.renderToFile(now: Date) {
+fun CurrentObjects.renderToFile(now: Date) =
     this.objects.values.fold(Graphviz()) { graph: Graphviz, changed: Changed<KubernetesObject> ->
         if (changed.isUpdating(now)) {
             graph.addChanged(changed.obj)
@@ -24,4 +24,3 @@ fun CurrentObjects.renderToFile(now: Date) {
             graph.addUnchanged(changed.obj)
         }
     }.renderToFile()
-}
