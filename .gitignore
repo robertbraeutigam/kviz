@@ -4,5 +4,3 @@ build
 gradle
 kubernetes-graph.png
 kubernetes-graph.svg
-/kubernetes-pods
-/kubernetes-replicasets

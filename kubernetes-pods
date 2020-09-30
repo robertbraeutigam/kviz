@@ -1,0 +1,133 @@
+Name:         hello-ff5d5694c-9zbn4
+Namespace:    default
+Priority:     0
+Node:         minikube/192.168.99.100
+Start Time:   Wed, 26 Feb 2020 18:12:19 +0100
+Labels:       app=hello
+              pod-template-hash=ff5d5694c
+Annotations:  kubectl.kubernetes.io/restartedAt: 2020-02-26T18:12:19+01:00
+Status:       Running
+IP:           172.17.0.6
+IPs:
+  IP:           172.17.0.6
+Controlled By:  ReplicaSet/hello-ff5d5694c
+Containers:
+  hello:
+    Container ID:   docker://70ac2b60960bb029d52438f875e2eb97c10fd02ef94af93340c9a4a32c9bd95a
+    Image:          paulbouwer/hello-kubernetes:1.7
+    Image ID:       docker-pullable://paulbouwer/hello-kubernetes@sha256:b5b35951d49faeb4844d90d749513acdec96485fa3ebb9d41492dcaa71254a30
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 26 Feb 2020 18:12:20 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-7sj8q (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-7sj8q:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-7sj8q
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:          <none>
+
+
+Name:         hello-ff5d5694c-lqfjn
+Namespace:    default
+Priority:     0
+Node:         minikube/192.168.99.100
+Start Time:   Wed, 26 Feb 2020 18:12:21 +0100
+Labels:       app=hello
+              pod-template-hash=ff5d5694c
+Annotations:  kubectl.kubernetes.io/restartedAt: 2020-02-26T18:12:19+01:00
+Status:       Running
+IP:           172.17.0.4
+IPs:
+  IP:           172.17.0.4
+Controlled By:  ReplicaSet/hello-ff5d5694c
+Containers:
+  hello:
+    Container ID:   docker://103a0990f490f40ec86c5a67db22c082c4fb8b8643684fbc3130488c9fed3e4a
+    Image:          paulbouwer/hello-kubernetes:1.7
+    Image ID:       docker-pullable://paulbouwer/hello-kubernetes@sha256:b5b35951d49faeb4844d90d749513acdec96485fa3ebb9d41492dcaa71254a30
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 26 Feb 2020 18:12:22 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-7sj8q (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-7sj8q:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-7sj8q
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:          <none>
+
+
+Name:         hello-ff5d5694c-nhr7r
+Namespace:    default
+Priority:     0
+Node:         minikube/192.168.99.100
+Start Time:   Wed, 26 Feb 2020 18:12:20 +0100
+Labels:       app=hello
+              pod-template-hash=ff5d5694c
+Annotations:  kubectl.kubernetes.io/restartedAt: 2020-02-26T18:12:19+01:00
+Status:       Running
+IP:           172.17.0.5
+IPs:
+  IP:           172.17.0.5
+Controlled By:  ReplicaSet/hello-ff5d5694c
+Containers:
+  hello:
+    Container ID:   docker://10955cd078d39fefc1e4382822e35b93e862fea5622a1917675dace6f4aadce1
+    Image:          paulbouwer/hello-kubernetes:1.7
+    Image ID:       docker-pullable://paulbouwer/hello-kubernetes@sha256:b5b35951d49faeb4844d90d749513acdec96485fa3ebb9d41492dcaa71254a30
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 26 Feb 2020 18:12:21 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-7sj8q (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-7sj8q:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-7sj8q
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:          <none>
