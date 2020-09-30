@@ -24,11 +24,11 @@ class Graphviz {
     }
 
     fun addUnchanged(obj: KubernetesObject) {
-        nodes.plus(renderToFile(obj).with(Style.FILLED))
+        nodes.add(renderToFile(obj).with(Style.FILLED))
     }
 
     fun addChanged(obj: KubernetesObject) {
-        nodes.plus(renderToFile(obj).with(Style.FILLED.and(Style.BOLD)))
+        nodes.add(renderToFile(obj).with(Style.FILLED.and(Style.BOLD)))
     }
 
     private fun renderToFile(obj: KubernetesObject) = when(obj) {
