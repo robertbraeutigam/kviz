@@ -1,22 +1,27 @@
 package de.mathema.robertbrautigam.kviz
 
 import arrow.syntax.collections.flatten
+import arrow.typeclasses.Monad
 
-fun <M> FileReader<M>.objects() = fx.monad {
+fun <M, F> F.objects()
+        where F: FileReader<M>, F: Monad<M> = fx.monad {
     val pods = objects("pods", ::parsePod).bind()
     val replicaSets = objects("replicasets", ::parseReplicaSet).bind()
     pods.plus(replicaSets).flatten()
 }
 
-private fun <M, T> FileReader<M>.objects(type: String, parse: (Map<String, String>) -> T) =
+private fun <M, F, T> F.objects(type: String, parse: (Map<String, String>) -> T)
+        where F: FileReader<M>, F: Monad<M> =
     descriptionBlocks(type).map { list ->
         list.map {
             parse(descriptionAttrs(it))
         }
     }
 
-private fun <M> FileReader<M>.descriptionBlocks(type: String) = descriptionText(type)
-    .map { it.split(Regex("\n\n")) }
+private fun <M, F> F.descriptionBlocks(type: String)
+        where F: FileReader<M>, F: Monad<M> =
+    descriptionText(type)
+        .map { it.split(Regex("\n\n")) }
 
 private fun <M> FileReader<M>.descriptionText(type: String) =
     readFile("kubernetes-$type")

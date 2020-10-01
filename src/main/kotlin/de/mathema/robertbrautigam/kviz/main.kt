@@ -1,19 +1,21 @@
 package de.mathema.robertbrautigam.kviz
 
 import arrow.Kind
+import arrow.extension
 import arrow.fx.ForIO
 import arrow.fx.IO
-import arrow.fx.extensions.io.monad.monad
+import arrow.fx.extensions.IOMonad
 import arrow.fx.fix
 import arrow.fx.typeclasses.Duration
 import arrow.typeclasses.Monad
+import de.mathema.robertbrautigam.kviz.io.application.application
 import guru.nidi.graphviz.engine.Renderer
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 fun main() {
-    Application.runApplication(CurrentObjects()).fix().unsafeRunSync()
+    IO.application().runApplication(CurrentObjects()).fix().unsafeRunSync()
 }
 
 interface Timed<M> {
@@ -22,7 +24,7 @@ interface Timed<M> {
     fun sleep(millis: Long): Kind<M, Unit>
 }
 
-interface FileReader<M>: Monad<M> {
+interface FileReader<M> {
     fun readFile(file: String): Kind<M, String>
 }
 
@@ -30,8 +32,10 @@ interface GraphizOutput<M> {
     fun Renderer.toOutput(file: File): Kind<M, Unit>
 }
 
-object Application: Timed<ForIO>, FileReader<ForIO>, GraphizOutput<ForIO>,
-                    Monad<ForIO> by IO.monad() {
+interface Application<M>: Timed<M>, FileReader<M>, GraphizOutput<M>, Monad<M>
+
+@extension
+interface IOApplication: Application<ForIO>, IOMonad {
     override fun now() = IO {
         Date()
     }
