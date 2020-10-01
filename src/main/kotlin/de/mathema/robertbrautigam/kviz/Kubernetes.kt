@@ -1,30 +1,25 @@
 package de.mathema.robertbrautigam.kviz
 
-import arrow.fx.IO
-import arrow.fx.extensions.fx
 import arrow.syntax.collections.flatten
-import java.io.File
 
-fun objects() = IO.fx {
+fun <M> FileReader<M>.objects() = fx.monad {
     val pods = objects("pods", ::parsePod).bind()
     val replicaSets = objects("replicasets", ::parseReplicaSet).bind()
     pods.plus(replicaSets).flatten()
 }
 
-private fun <T> objects(type: String, parse: (Map<String, String>) -> T) =
+private fun <M, T> FileReader<M>.objects(type: String, parse: (Map<String, String>) -> T) =
     descriptionBlocks(type).map { list ->
         list.map {
             parse(descriptionAttrs(it))
         }
     }
 
-private fun descriptionBlocks(type: String) = descriptionText(type)
+private fun <M> FileReader<M>.descriptionBlocks(type: String) = descriptionText(type)
     .map { it.split(Regex("\n\n")) }
 
-private fun descriptionText(type: String) = IO {
-    File("kubernetes-$type")
-        .readText()
-}
+private fun <M> FileReader<M>.descriptionText(type: String) =
+    readFile("kubernetes-$type")
 
 /* This is for real kubectl
 private fun descriptionText(type: String): List<String> {

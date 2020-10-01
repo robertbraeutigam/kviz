@@ -1,6 +1,6 @@
 package de.mathema.robertbrautigam.kviz
 
-import arrow.fx.IO
+import arrow.Kind
 import guru.nidi.graphviz.attribute.*
 import guru.nidi.graphviz.engine.Format
 import guru.nidi.graphviz.model.Factory
@@ -11,18 +11,17 @@ import guru.nidi.graphviz.engine.Graphviz as GraphvizEngine
 
 data class Graphviz(val nodes: List<Node> = emptyList())
 
-fun Graphviz.renderToFile(): IO<Unit> {
+fun <M> GraphizOutput<M>.renderToFile(graphviz: Graphviz): Kind<M, Unit> {
     val graph = graph("kubernetes-graph").directed()
         .graphAttr()
         .with(Rank.dir(Rank.RankDir.RIGHT_TO_LEFT))
-        .with(this.nodes)
+        .with(graphviz.nodes)
         .nodeAttr().with(Font.size(24))
-    return IO {
-        GraphvizEngine
-            .fromGraph(graph)
-            .fontAdjust(0.85)
-            .render(Format.PNG).toFile(File("kubernetes-graph.png"))
-    }.map { Unit }
+    return GraphvizEngine
+        .fromGraph(graph)
+        .fontAdjust(0.85)
+        .render(Format.PNG)
+        .toOutput(File("kubernetes-graph.png"))
 }
 
 fun Graphviz.addUnchanged(obj: KubernetesObject) =

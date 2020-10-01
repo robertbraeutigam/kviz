@@ -1,25 +1,23 @@
 package de.mathema.robertbrautigam.kviz
 
 import arrow.core.Either.Companion.left
-import arrow.fx.IO
-import arrow.fx.extensions.fx
-import arrow.fx.typeclasses.Duration
-import java.util.*
-import java.util.concurrent.TimeUnit
 
-fun runApplication(currentObjects: CurrentObjects) =
-    IO.tailRecM(currentObjects, ::loopBody)
+fun <M, F> F.runApplication(currentObjects: CurrentObjects)
+        where F: FileReader<M>, F: GraphizOutput<M>, F: Timed<M> =
+    tailRecM(currentObjects, ::loopBody)
 
-private fun loopBody(currentObjects: CurrentObjects) = IO.fx {
-    sleep(Duration(1000L, TimeUnit.MILLISECONDS)).bind()
+private fun <M, F> F.loopBody(currentObjects: CurrentObjects)
+        where F: FileReader<M>, F: GraphizOutput<M>, F: Timed<M> = fx.monad {
+    sleep(1000L).bind()
     val newObjects = runBody(currentObjects).bind()
     left(newObjects)
 }
 
-private fun runBody(currentObjects: CurrentObjects) = IO.fx {
+private fun <M, F> F.runBody(currentObjects: CurrentObjects)
+        where F: FileReader<M>, F: GraphizOutput<M>, F: Timed<M> = fx.monad {
     val objects = objects().bind()
-    val now = IO { Date() }.bind()
+    val now = now().bind()
     val newObjects = currentObjects.update(now, objects)
-    currentObjects.renderToFile(now).bind()
+    renderToFile(currentObjects, now).bind()
     newObjects
 }
