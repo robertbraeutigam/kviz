@@ -16,12 +16,10 @@ private fun loopBody(currentObjects: CurrentObjects) = IO.fx {
     left(newObjects)
 }
 
-private fun runBody(currentObjects: CurrentObjects) =
-    objects().flatMap { objects ->
-        IO { Date() }.flatMap { now ->
-            val newObjects = currentObjects.update(now, objects)
-            currentObjects.renderToFile(now).map {
-                newObjects
-            }
-        }
-    }
+private fun runBody(currentObjects: CurrentObjects) = IO.fx {
+    val objects = objects().bind()
+    val now = IO { Date() }.bind()
+    val newObjects = currentObjects.update(now, objects)
+    currentObjects.renderToFile(now).bind()
+    newObjects
+}
