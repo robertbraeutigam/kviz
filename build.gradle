@@ -11,7 +11,7 @@ repositories {
 
 apply plugin: 'kotlin-kapt'
 
-def arrow_version = "0.12.1"
+def arrow_version = "0.11.0"
 
 dependencies {
     compile "io.arrow-kt:arrow-core:$arrow_version"
