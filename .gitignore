@@ -1,6 +1,7 @@
 .idea
 .gradle
 build
-gradle
+gradle/wrapper/*jar
 kubernetes-graph.png
 kubernetes-graph.svg
+rebase-all
